@@ -1,23 +1,28 @@
 import datetime
 from app import db, ma
 
-contacts = db.Table(
-    "contacts",
-    db.Model.metadata,
-    db.Column("user_id", db.Inteher, db.ForeignKey("user.id")),
-    db.Column("contact_id", db.Inteher, db.ForeignKey("user.id")),
+user_contact = db.Table(
+    "user_contact",
+    db.Column("user_id", db.Integer, db.ForeignKey("users.id"), primary_key=True),
+    db.Column("contact_id", db.Integer, db.ForeignKey("users.id"), primary_key=True),
+    db.Column("created_at", db.DateTime, default=datetime.datetime.now()),
 )
 
 
 class User(db.Model):
-    __tablename__ == "users"
+    __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     name = db.Column(db.String(60), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-    contacts = db.relationship("User", secondary=contacts)
-    messages = db.relationship("Message", backref="user", fazy=True)
+    contacts = db.relationship(
+        "User",
+        secondary=user_contact,
+        primaryjoin=id == user_contact.c.user_id,
+        secondaryjoin=id == user_contact.c.contact_id,
+    )
+    messages = db.relationship("Message", backref="users", lazy=True)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now())
 
     def __init__(self, username, name, email, password):
@@ -34,8 +39,6 @@ class UserSchema(ma.Schema):
             "username",
             "name",
             "email",
-            "password",
-            "contacts",
             "created_at",
         )
 
