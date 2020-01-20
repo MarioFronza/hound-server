@@ -7,3 +7,5 @@ app.config.from_object("config")
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
+
+from .routes import routes
