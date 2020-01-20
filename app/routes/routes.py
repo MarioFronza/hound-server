@@ -1,6 +1,6 @@
 from app import app
 from flask import jsonify
-from ..controllers import user, contact
+from ..controllers import user, contact, message
 
 # users
 @app.route("/users", methods=["POST"])
@@ -38,9 +38,9 @@ def delete_user(id):
 # messages
 @app.route("/messages/<id>", methods=["GET"])
 def list_messages(id):
-    return jsonify({"message": "List Messages"})
+    return message.index(id)
 
 
 @app.route("/messages/<id>", methods=["POST"])
 def create_message(id):
-    return jsonify({"message": "Create Message"})
+    return message.store(id)
