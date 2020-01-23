@@ -7,7 +7,6 @@ from ..models.user import User, user_schema, users_schema
 
 
 def store():
-    username = request.json["username"]
     name = request.json["name"]
     email = request.json["email"]
     password = request.json["password"]
@@ -29,7 +28,6 @@ def store():
 
 
 def update(id):
-    username = request.json["username"]
     name = request.json["name"]
     email = request.json["email"]
     password = request.json["password"]
@@ -41,7 +39,6 @@ def update(id):
     password_hash = generate_password_hash(password)
 
     try:
-        user.username = username
         user.name = name
         user.email = email
         user.password = password_hash

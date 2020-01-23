@@ -30,6 +30,7 @@ def store(id):
 
     try:
         user.contacts.append(contact)
+        contact.contacts.append(user)
         db.session.commit()
         result = user_schema.dump(contact)
         return jsonify(result), 201
