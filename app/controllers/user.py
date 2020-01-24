@@ -16,7 +16,7 @@ def store():
         return jsonify({"message": "User already exists"}), 400
 
     password_hash = generate_password_hash(password)
-    user = User(username, name, email, password)
+    user = User(name, email, password_hash)
 
     try:
         db.session.add(user)

@@ -24,8 +24,7 @@ class User(db.Model):
     messages = db.relationship("Message", backref="users", lazy=True)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now())
 
-    def __init__(self, username, name, email, password):
-        self.username = username
+    def __init__(self, name, email, password):
         self.password = password
         self.name = name
         self.email = email

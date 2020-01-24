@@ -1,8 +1,30 @@
+from flask import jsonify, request
+from flask_jwt_extended import create_access_token
+from werkzeug.security import check_password_hash
+
 from app import app
-from flask import request, jsonify
+
 from ..models.user import User, user_schema
 
 
 def store():
-    pass
+    email = request.json["email"]
+    password = request.json["password"]
 
+    user = find_user_by_email(email)
+    if not user:
+        return jsonify({"message": "User does not exists"}), 401
+    print(user.password)
+    print(password)
+    if not check_password_hash(user.password, password):
+        return jsonify({"message": "Invalid password"}), 401
+
+    access_token = create_access_token(identity=user.id)
+    return jsonify(access_token=access_token), 200
+
+
+def find_user_by_email(email):
+    try:
+        return User.query.filter(User.email == email).one()
+    except:
+        return None

@@ -1,6 +1,10 @@
-from app import app
 from flask import jsonify
-from ..controllers import user, contact, message
+from flask_jwt_extended import jwt_required
+
+from app import app
+
+from ..controllers import contact, message, user, session
+
 
 # users
 @app.route("/users", methods=["POST"])
@@ -9,6 +13,7 @@ def create_user():
 
 
 @app.route("/users/<id>", methods=["PUT"])
+@jwt_required
 def update_user(id):
     return user.update(id)
 
@@ -16,7 +21,7 @@ def update_user(id):
 # sessions
 @app.route("/sessions", methods=["POST"])
 def create_session():
-    return jsonify({"message": "Create Session"})
+    return session.store()
 
 
 # contacts

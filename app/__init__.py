@@ -1,13 +1,16 @@
 from flask import Flask
+from flask_jwt_extended import JWTManager
 from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
+
 
 app = Flask(__name__)
 app.config.from_object("config")
 
+jwt = JWTManager(app)
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
-from .models import user, message
-from .controllers import user, contact, message
+from .controllers import contact, message, user, session
+from .models import message, user
 from .routes import routes
