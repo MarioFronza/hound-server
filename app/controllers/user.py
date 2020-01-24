@@ -1,4 +1,5 @@
 from flask import jsonify, request
+from flask_jwt_extended import get_jwt_identity
 from werkzeug.security import generate_password_hash
 
 from app import db
@@ -27,21 +28,18 @@ def store():
         return jsonify({"message": "Unable to create"}), 500
 
 
-def update(id):
+def update():
+    id = get_jwt_identity()
     name = request.json["name"]
     email = request.json["email"]
-    password = request.json["password"]
 
     user = find_user_by_id(id)
     if not user:
         return jsonify({"message": "User does not exists"}), 400
 
-    password_hash = generate_password_hash(password)
-
     try:
         user.name = name
         user.email = email
-        user.password = password_hash
         db.session.commit()
         result = user_schema.dump(user)
         return jsonify(result), 200

@@ -1,11 +1,12 @@
 from flask import jsonify, request
-
+from flask_jwt_extended import get_jwt_identity
 from app import db
 
 from ..models.user import User, user_schema, users_schema
 
 
-def index(id):
+def index():
+    id = get_jwt_identity()
     user = find_user_by_id(id)
 
     if not user:
@@ -16,7 +17,8 @@ def index(id):
     return jsonify(result)
 
 
-def store(id):
+def store():
+    id = get_jwt_identity()
     email = request.json["email"]
 
     user = find_user_by_id(id)
@@ -39,10 +41,10 @@ def store(id):
 
 
 def destroy(id):
-    email = request.json["email"]
+    user_id = get_jwt_identity()
 
-    user = find_user_by_id(id)
-    contact = find_user_by_email(email)
+    user = find_user_by_id(user_id)
+    contact = find_user_by_id(id)
 
     if not user:
         return jsonify({"message": "User does not exists"}), 400

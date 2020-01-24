@@ -20,7 +20,8 @@ def store():
         return jsonify({"message": "Invalid password"}), 401
 
     access_token = create_access_token(identity=user.id)
-    return jsonify(access_token=access_token), 200
+    result = user_schema.dump(user)
+    return jsonify(access_token=access_token, user=result), 200
 
 
 def find_user_by_email(email):

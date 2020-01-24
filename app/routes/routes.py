@@ -12,10 +12,10 @@ def create_user():
     return user.store()
 
 
-@app.route("/users/<id>", methods=["PUT"])
+@app.route("/users", methods=["PUT"])
 @jwt_required
-def update_user(id):
-    return user.update(id)
+def update_user():
+    return user.update()
 
 
 # sessions
@@ -25,14 +25,14 @@ def create_session():
 
 
 # contacts
-@app.route("/contacts/<id>", methods=["GET"])
-def list_contacts(id):
-    return contact.index(id)
+@app.route("/contacts", methods=["GET"])
+def list_contacts():
+    return contact.index()
 
 
-@app.route("/contacts/<id>", methods=["POST"])
-def create_contact(id):
-    return contact.store(id)
+@app.route("/contacts", methods=["POST"])
+def create_contact():
+    return contact.store()
 
 
 @app.route("/contacts/<id>", methods=["DELETE"])
@@ -41,11 +41,11 @@ def delete_user(id):
 
 
 # messages
-@app.route("/messages/<id>", methods=["GET"])
-def list_messages(id):
-    return message.index(id)
+@app.route("/messages", methods=["GET"])
+def list_messages():
+    return message.index()
 
 
-@app.route("/messages/<id>", methods=["POST"])
-def create_message(id):
-    return message.store(id)
+@app.route("/messages", methods=["POST"])
+def create_message():
+    return message.store()

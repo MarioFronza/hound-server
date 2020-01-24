@@ -1,10 +1,12 @@
 from app import db
 from flask import request, jsonify
+from flask_jwt_extended import get_jwt_identity
 from ..models.message import Message, messages_schema, message_schema
 from ..models.user import User
 
 
-def index(id):
+def index():
+    id = get_jwt_identity()
     user = find_user_by_id(id)
 
     if not user:
@@ -15,13 +17,14 @@ def index(id):
     return jsonify(result)
 
 
-def store(id):
-    user_id = request.json["user_id"]
+def store():
+    id = get_jwt_identity()
+    contact_id = request.json["contact_id"]
     send = request.json["send"]
     content = request.json["content"]
 
     user = find_user_by_id(id)
-    contact = find_user_by_id(user_id)
+    contact = find_user_by_id(contact_id)
 
     if not user:
         return jsonify({"message": "User does not exists"}), 400
@@ -29,7 +32,7 @@ def store(id):
     if not contact:
         return jsonify({"message": "Contact does not exists"}), 400
 
-    message = Message(user_id, send, content)
+    message = Message(contact_id, send, content)
     received_message = Message(id, False, content)
 
     try:
