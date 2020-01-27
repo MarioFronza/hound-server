@@ -19,7 +19,7 @@ class Message(db.Model):
 
 class MessageSchema(ma.Schema):
     class Meta:
-        fields = ("id", "user_id", "send", "content")
+        fields = ("id", "user_id", "send", "content", "created_at")
 
 
 message_schema = MessageSchema()

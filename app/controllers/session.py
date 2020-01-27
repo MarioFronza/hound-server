@@ -1,3 +1,5 @@
+import datetime
+
 from flask import jsonify, request
 from flask_jwt_extended import create_access_token
 from werkzeug.security import check_password_hash
@@ -19,7 +21,8 @@ def store():
     if not check_password_hash(user.password, password):
         return jsonify({"message": "Invalid password"}), 401
 
-    access_token = create_access_token(identity=user.id)
+    expires = datetime.timedelta(days=7)
+    access_token = create_access_token(identity=user.id, expires_delta=expires)
     result = user_schema.dump(user)
     return jsonify(access_token=access_token, user=result), 200
 
