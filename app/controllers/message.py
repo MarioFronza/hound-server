@@ -1,7 +1,9 @@
-from app import db
-from flask import request, jsonify
+from flask import jsonify, request
 from flask_jwt_extended import get_jwt_identity
-from ..models.message import Message, messages_schema, message_schema
+
+from app import connectedUsers, db, socketio
+
+from ..models.message import Message, message_schema, messages_schema
 from ..models.user import User
 
 
@@ -40,6 +42,9 @@ def store():
         db.session.add(received_message)
         db.session.commit()
         result = message_schema.dump(message)
+        if str(contact.id) in connectedUsers:
+            socketio.emit("message", result, room=connectedUsers[str(contact.id)])
+
         return jsonify(result), 201
     except:
         return jsonify({"message": "Unable to create message"}), 500

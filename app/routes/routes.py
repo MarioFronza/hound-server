@@ -1,9 +1,9 @@
-from flask import jsonify
+from flask import jsonify, request, g
 from flask_jwt_extended import jwt_required
 
-from app import app
+from app import app, socketio, connectedUsers
 
-from ..controllers import contact, message, user, session
+from ..controllers import contact, message, session, user
 
 
 # users
@@ -54,3 +54,11 @@ def list_messages():
 @jwt_required
 def create_message():
     return message.store()
+
+
+@socketio.on("connect")
+def connect():
+    id = request.args.get("id")
+    socket = request.sid
+    connectedUsers[id] = socket
+
